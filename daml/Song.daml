@@ -1,10 +1,6 @@
 daml 1.2
 module Song where
 
-
-import DA.Assert
-
-
 template Record
     with
         songName: Text

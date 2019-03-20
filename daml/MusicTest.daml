@@ -28,3 +28,7 @@ setupTest = scenario do
             songName = "Umbrella"
             artiste = rihanna
             owner = iTunes
+
+    submit user do
+        exercise music Create_Money with
+            amount = 100.0

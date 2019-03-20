@@ -9,6 +9,7 @@ type MoneyTransferId = ContractId MoneyTransfer
 
 template Money
   with
+    issuer : Party
     owner : Party
     amount : Decimal
     form : Text
@@ -16,6 +17,7 @@ template Money
   where
     ensure amount > 0.0
 
+    signatory issuer, owner
     controller owner can
 
       -- Split the Royalties by dividing the amount.

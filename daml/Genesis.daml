@@ -3,6 +3,7 @@ daml 1.2
 module Genesis where
 
 import Song
+import Money
 
 type MusicId = ContractId Music
 
@@ -19,11 +20,18 @@ template Music
   where
     signatory master
 
-    controller songwriter can
-      Create_Song : ContractId Record 
+    controller songwriter can 
+      nonconsuming Create_Song : ContractId Record 
         with
           songName: Text
           artiste: Party
           owner: Party
         do
           create Record with songName; songwriter; artist = artiste; owner
+
+    controller listener can
+      nonconsuming Create_Money : ContractId Money 
+        with
+          amount: Decimal
+        do
+          create Money with amount; form = "Cash"; owner = listener; issuer = listener
