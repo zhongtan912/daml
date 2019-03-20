@@ -2,17 +2,16 @@
 -- SPDX-License-Identifier: Apache-2.0
 
 daml 1.2
-module Royalties where
+module Money where
 
-type RoyaltiesId = ContractId Royalties
-type RoyaltiesTransferId = ContractId RoyaltiesTransfer
+type MoneyId = ContractId Money
+type MoneyTransferId = ContractId MoneyTransfer
 
-template Royalties
+template Money
   with
-    provider : Party
     owner : Party
-    ratio : Decimal
     amount : Decimal
+    form : Text
 
   where
     ensure amount > 0.0
@@ -20,7 +19,7 @@ template Royalties
     controller owner can
 
       -- Split the Royalties by dividing the amount.
-      Royalties_Split : (RoyaltiesId, RoyaltiesId)
+      Money_Split : (MoneyId, MoneyId)
          with
           splitAmount: Decimal
         do
@@ -29,23 +28,23 @@ template Royalties
           restCid <- create this with amount = restAmount
           return (splitCid, restCid)
 
-      Royalties_Transfer : RoyaltiesTransferId
+      Money_Transfer : MoneyTransferId
         with
           newOwner : Party
-        do create RoyaltiesTransfer with royalties = this; newOwner
+        do create MoneyTransfer with money = this; newOwner
 
-template RoyaltiesTransfer
+template MoneyTransfer
   with
-    royalties : Royalties
+    money : Money
     newOwner : Party
   where
-    signatory royalties.provider, royalties.owner
+    signatory money.owner
 
     controller newOwner can
-      RoyaltiesTransfer_Accept : RoyaltiesId
+      MoneyTransfer_Accept : MoneyId
         do 
-        create royalties with
+        create money with
           owner = newOwner
       
-      RoyaltiesTransfer_Reject : RoyaltiesId
-        do create royalties
+      MoneyTransfer_Reject : MoneyId
+        do create money
