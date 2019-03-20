@@ -1,0 +1,25 @@
+daml 1.2
+module Song where
+
+
+import DA.Assert
+
+
+template Record
+    with
+        songName: Text
+        songwriter: Party
+        artist: Party
+        owner: Party
+    where
+        signatory songwriter
+         
+        controller songwriter  can
+           Transfer : ContractId Record
+                with
+                    newOwner : Party
+                do create Record with songName; songwriter;owner= newOwner;artist
+            
+
+
+
