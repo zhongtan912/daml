@@ -1,0 +1,29 @@
+daml 1.2
+
+module Genesis where
+
+import Song
+
+type MusicId = ContractId Music
+
+template Music
+  with
+    provider : Party
+    label : Party
+    publisher : Party
+    artist : Party
+    songwriter : Party
+    listener : Party
+    master : Party
+  
+  where
+    signatory master
+
+    controller songwriter can
+      Create_Song : ContractId Record 
+        with
+          songName: Text
+          artiste: Party
+          owner: Party
+        do
+          create Record with songName; songwriter; artist = artiste; owner

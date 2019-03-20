@@ -1,0 +1,30 @@
+daml 1.2
+module MusicTest where
+
+import Genesis
+
+setupTest = scenario do
+    iTunes <- getParty "iTunes"
+    defJam <- getParty "Def Jam Recordings"
+    hipgnosis <- getParty "Hipgnosis"
+    rihanna <- getParty "Rihanna"
+    trickystewards <- getParty "Tricky Stewards"
+    user <- getParty "iTunes user"
+    master <- getParty "Master"
+
+    --Create music market with genesis contract
+    music <- submit master do
+        create Music with
+            provider = iTunes
+            label = defJam
+            publisher = hipgnosis
+            artist = rihanna
+            songwriter = trickystewards
+            listener = user
+            master
+    
+    submit trickystewards do
+        exercise music Create_Song with 
+            songName = "Umbrella"
+            artiste = rihanna
+            owner = iTunes
