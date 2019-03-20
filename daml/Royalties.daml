@@ -5,6 +5,7 @@ daml 1.2
 module Royalties where
 
 type RoyaltiesId = ContractId Royalties
+type RoyaltiesTransferId = ContractId RoyaltiesTransfer
 
 template Royalties
   with
@@ -28,31 +29,10 @@ template Royalties
           restCid <- create this with amount = restAmount
           return (splitCid, restCid)
 
-      Royalties_Transfer : RoyaltiesId
+      Royalties_Transfer : RoyaltiesTransferId
         with
           newOwner : Party
         do create RoyaltiesTransfer with royalties = this; newOwner
-
-      {-- Merge two IOUs by aggregating their amounts.
-      Iou_Merge : IouId
-        with
-          otherCid: IouId
-        do
-          otherIou <- fetch otherCid
-          -- Check the two IOU's are compatible
-          assert (
-            currency == otherIou.currency &&
-            owner == otherIou.owner &&
-            issuer == otherIou.issuer
-            )
-          -- Retire the old Iou
-          archive otherCid
-          -- Return the merged Iou      Iou_Transfer : ContractId IouTransfer
-        with
-          newOwner : Party
-        do create IouTransfer with iou = this; newOwner
-          create this with amount = amount + otherIou.amount
-          --}
 
 template RoyaltiesTransfer
   with
