@@ -9,20 +9,17 @@ type RoyaltiesId = ContractId Royalties
 template Royalties
   with
     provider : Party
-    label : Party
-    publisher : Party
+    owner : Party
     ratio : Decimal
     amount : Decimal
 
   where
     ensure amount > 0.0
 
-    signatory label, publisher
+    controller owner can
 
-    controller provider can
-
-      -- Split the IOU by dividing the amount.
-      Iou_Split : (IouId, IouId)
+      -- Split the Royalties by dividing the amount.
+      Royalties_Split : (RoyaltiesId, RoyaltiesId)
          with
           splitAmount: Decimal
         do
@@ -31,7 +28,12 @@ template Royalties
           restCid <- create this with amount = restAmount
           return (splitCid, restCid)
 
-      -- Merge two IOUs by aggregating their amounts.
+      Royalties_Transfer : RoyaltiesId
+        with
+          newOwner : Party
+        do create RoyaltiesTransfer with royalties = this; newOwner
+
+      {-- Merge two IOUs by aggregating their amounts.
       Iou_Merge : IouId
         with
           otherCid: IouId
@@ -45,41 +47,25 @@ template Royalties
             )
           -- Retire the old Iou
           archive otherCid
-          -- Return the merged Iou
-          create this with amount = amount + otherIou.amount
-
-      Iou_Transfer : ContractId IouTransfer
+          -- Return the merged Iou      Iou_Transfer : ContractId IouTransfer
         with
           newOwner : Party
         do create IouTransfer with iou = this; newOwner
+          create this with amount = amount + otherIou.amount
+          --}
 
-      Iou_AddObserver : IouId
-        with
-          newObserver : Party
-        do create this with observers = newObserver :: observers
-
-      Iou_RemoveObserver : IouId
-        with
-          oldObserver : Party
-        do create this with observers = filter (/= oldObserver) observers
-
-template IouTransfer
+template RoyaltiesTransfer
   with
-    iou : Iou
+    royalties : Royalties
     newOwner : Party
   where
-    signatory iou.issuer, iou.owner
-
-    controller iou.owner can
-      IouTransfer_Cancel : IouId
-        do create iou
+    signatory royalties.provider, royalties.owner
 
     controller newOwner can
-      IouTransfer_Reject : IouId
-        do create iou
-
-      IouTransfer_Accept : IouId
-        do
-          create iou with
-            owner = newOwner
-            observers = []
+      RoyaltiesTransfer_Accept : RoyaltiesId
+        do 
+        create royalties with
+          owner = newOwner
+      
+      RoyaltiesTransfer_Reject : RoyaltiesId
+        do create royalties
