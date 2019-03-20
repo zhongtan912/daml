@@ -1,0 +1,11 @@
+02:44:27.160 [main] INFO  c.d.p.sandbox.SandboxApplication$ - Initialized sandbox version 100.11.14 with ledger-id = sandbox-a629478f-ad3f-4f77-beef-ff4a88e6d92a, port = 7600, dar file = DamlPackageContainer(List(/home/patrick/tutorial_1/target/tutorial_1.dar, /home/patrick/tutorial_1/target/ghc-prim.dalf)), time mode = Static, daml-engine = {} 
+02:44:30.381 [main] INFO  c.d.p.sandbox.SandboxApplication$ - DAML LF Engine supports LF versions: 1.0, 1.1, 0; Transaction versions: 1, 2, 3, 4; Value versions: 1, 2, 3 
+02:44:30.527 [main] INFO  c.d.p.sandbox.SandboxApplication$ - Initialized Static time provider, starting from 1970-01-01T00:00:00Z 
+02:44:30.615 [main] INFO  c.d.p.sandbox.SandboxApplication$ - Starting plainText server 
+02:44:31.229 [main] INFO  c.d.p.sandbox.SandboxApplication$ - listening on localhost:7600 
+02:45:39.412 [sandbox-akka.actor.default-dispatcher-7] WARN  c.d.p.s.s.SandboxSubmissionService - Submission of command 613852caf2d9addb has failed. 
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:Iou)) requires controllers: SimpleString(Alice), but only SimpleString(EUR_Bank) were given. Details: N/A.
+02:50:45.622 [sandbox-akka.actor.default-dispatcher-14] WARN  c.d.p.s.s.SandboxSubmissionService - Submission of command ad09abe856f89309 has failed. 
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:IouTransfer)) requires controllers: SimpleString(HAHA), but only SimpleString(Bob) were given. Details: N/A.
+02:51:14.864 [sandbox-akka.actor.default-dispatcher-14] WARN  c.d.p.s.s.SandboxSubmissionService - Submission of command effaab61ce4d6d37 has failed. 
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:IouTransfer)) requires controllers: SimpleString(HAHA), but only SimpleString(Bob) were given. Details: N/A.

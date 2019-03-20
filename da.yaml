@@ -1,0 +1,11 @@
+project:
+  sdk-version: 0.11.14
+  scenario: Main:setupTest
+  name: tutorial_1
+  source: daml/Main.daml
+  parties:
+  - Alice
+  - Bob
+  - USD_Bank
+  - EUR_Bank
+version: 2

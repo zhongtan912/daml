@@ -1,0 +1,39 @@
+daml 1.2
+module Execution where
+
+import FirstContract
+
+exampleTest  = scenario do
+    alice <- getParty "alice"
+    bob <- getParty "bob"
+    bank <- getParty "bank"
+
+    aliceToBank <- submit alice do
+        create Payout with 
+            giver = alice
+            receiver = bank
+            currency = "USD"
+            amount = 100.0
+
+
+    aliceToBob <- submit alice do
+        exercise aliceToBank Transfer with newReceiver = bob
+
+    bobAcccept <- submit bob do 
+        exercise aliceToBob Accept_transfer
+
+    (bob1, bob2) <- submit bob do
+        exercise bobAcccept Share with shareAmt = 20.0
+
+    bobnew <- submit bob do
+        exercise bob1 Merge with otherCid = bob2
+
+    bobnew2 <- submit bob do
+        exercise bobnew Zero
+
+    submit bob do
+        exercise bobnew2 Archive_Receipt 
+
+{-     submitMustFail bank do
+        exercise aliceToBob Accept_transfer
+ -}

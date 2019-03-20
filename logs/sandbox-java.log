@@ -1,0 +1,21 @@
+   ____             ____
+  / __/__ ____  ___/ / /  ___ __ __
+ _\ \/ _ `/ _ \/ _  / _ \/ _ \\ \ /
+/___/\_,_/_//_/\_,_/_.__/\___/_\_\
+
+Initialized sandbox version 100.11.14 with ledger-id = sandbox-a629478f-ad3f-4f77-beef-ff4a88e6d92a, port = 7600, dar file = DamlPackageContainer(List(/home/patrick/tutorial_1/target/tutorial_1.dar, /home/patrick/tutorial_1/target/ghc-prim.dalf)), time mode = Static, daml-engine = {}
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by com.google.protobuf.UnsafeUtil (file:/home/patrick/.da/packages/sandbox/100.11.14/sandbox-100.11.14.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of com.google.protobuf.UnsafeUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+DAML LF Engine supports LF versions: 1.0, 1.1, 0; Transaction versions: 1, 2, 3, 4; Value versions: 1, 2, 3
+Initialized Static time provider, starting from 1970-01-01T00:00:00Z
+Starting plainText server
+listening on localhost:7600
+Submission of command 613852caf2d9addb has failed.
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:Iou)) requires controllers: SimpleString(Alice), but only SimpleString(EUR_Bank) were given. Details: N/A.
+Submission of command ad09abe856f89309 has failed.
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:IouTransfer)) requires controllers: SimpleString(HAHA), but only SimpleString(Bob) were given. Details: N/A.
+Submission of command effaab61ce4d6d37 has failed.
+com.digitalasset.platform.server.api.ApiException: INVALID_ARGUMENT: Command interpretation error in LF-DAMLe: The following errors occured: node NodeId(0) (Identifier(SimpleString(1e1238fcb1eef2a7df24b05c21c0db75df3ffc7059bc00e54ec0a9da23b456c3),Iou:IouTransfer)) requires controllers: SimpleString(HAHA), but only SimpleString(Bob) were given. Details: N/A.

@@ -1,0 +1,75 @@
+daml 1.2
+module FirstContract where
+
+type ReceiptId = ContractId Receipt
+type PayoutId = ContractId Payout
+
+template Payout 
+    with
+        giver: Party
+        receiver: Party
+        currency: Text
+        amount: Decimal
+    where
+        signatory giver
+        ensure amount > 0.0 
+        agreement 
+            show giver <> "give the receiver"
+            <> show receiver <> "on demand the sum of"
+            <> show currency <> show amount
+
+        controller giver can 
+            Transfer : PayoutId
+                with newReceiver : Party
+                do
+                    create this with giver; receiver=newReceiver; currency; amount                    
+
+        controller receiver can
+            Accept_transfer : ReceiptId
+                do
+                    create Receipt with
+                        giver; receiver; currency; amount
+
+
+template Receipt
+    with
+        giver: Party
+        receiver: Party
+        currency: Text
+        amount: Decimal
+    where
+        signatory receiver
+        agreement
+            show receiver <> "received" <> show currency <> show amount <> "from " <> show giver
+
+        controller receiver can 
+            Share : (ReceiptId, ReceiptId)
+                with shareAmt: Decimal
+                do
+                    let remainder = amount - shareAmt
+                    shareCid <- create this with amount = shareAmt
+                    restCid <- create this with amount = remainder
+                    return (shareCid, restCid)
+
+            Merge: ReceiptId
+                with otherCid: ReceiptId
+                do
+                    otherReceipt <- fetch otherCid
+                    assert (
+                        currency == otherReceipt.currency &&
+                        giver == otherReceipt.giver &&
+                        receiver == otherReceipt.receiver
+                        )
+                    --Retire the old contract
+                    archive otherCid
+                    create this with amount = amount + otherReceipt.amount
+
+            Zero: ReceiptId
+                do
+                    create this with amount = 0.0
+
+            Archive_Receipt : Int
+                do
+                    if (amount /= 0.0)
+                      then abort "amount is not zero"
+                      else return (5)
