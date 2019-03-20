@@ -2,13 +2,13 @@
 -- SPDX-License-Identifier: Apache-2.0
 
 daml 1.2
-module Iou where
+module Royalties where
 
-type IouId = ContractId Iou
+type RoyaltiesId = ContractId Royalties
 
-template Iou
+template Royalties
   with
-    issuer : Party
+    provider : Party
     owner : Party
     currency : Text
     amount : Decimal
