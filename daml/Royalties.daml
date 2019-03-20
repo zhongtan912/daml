@@ -9,18 +9,17 @@ type RoyaltiesId = ContractId Royalties
 template Royalties
   with
     provider : Party
-    owner : Party
-    currency : Text
+    label : Party
+    publisher : Party
+    ratio : Decimal
     amount : Decimal
-    observers : [Party]
+
   where
     ensure amount > 0.0
 
-    signatory issuer, owner
+    signatory label, publisher
 
-    observer observers
-
-    controller owner can
+    controller provider can
 
       -- Split the IOU by dividing the amount.
       Iou_Split : (IouId, IouId)
