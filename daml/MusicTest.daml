@@ -12,23 +12,22 @@ setupTest = scenario do
     user <- getParty "iTunes user"
     master <- getParty "Master"
 
-    --Create music market with genesis contract
-    music <- submit master do
-        create Music with
-            provider = iTunes
-            label = defJam
-            publisher = hipgnosis
-            artist = rihanna
-            songwriter = trickystewards
-            listener = user
+    --Onboard songwriter with genesis contract
+    onboarding <- submit master do
+        create Onboarding with
             master
-    
+
+    composerRights <- submit master do
+        exercise onboarding Onboard_Songwriter with grantee = trickystewards
+
+    listenerRights <- submit master do
+        exercise onboarding Onboard_Listener with grantee = user
+
     submit trickystewards do
-        exercise music Create_Song with 
+        exercise composerRights Create_Song with 
             songName = "Umbrella"
-            artiste = rihanna
-            owner = iTunes
+            artist = rihanna
 
     submit user do
-        exercise music Create_Money with
+        exercise listenerRights Create_Money with
             amount = 100.0

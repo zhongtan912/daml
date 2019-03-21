@@ -5,33 +5,55 @@ module Genesis where
 import Song
 import Money
 
-type MusicId = ContractId Music
-
-template Music
+template Onboarding 
   with
-    provider : Party
-    label : Party
-    publisher : Party
-    artist : Party
+    master: Party
+  where
+    signatory master
+    controller master can
+      nonconsuming Onboard_Songwriter: ContractId RightToCompose
+        with grantee: Party
+        do
+          create RightToCompose with songwriter = grantee; master
+      
+      nonconsuming Onboard_Listener: ContractId RightToIssue
+        with grantee: Party
+        do
+          create RightToIssue with listener = grantee; master
+
+template RightToCompose
+  with
     songwriter : Party
+    master : Party
+  where
+    signatory master
+    agreement 
+      show master <> "gives " <> show songwriter <> "right to compose"
+    controller songwriter can 
+      nonconsuming Create_Song : ContractId Record 
+        with
+          songName: Text
+          artist: Party
+        do
+          create Record with songName; songwriter; artist; owner = songwriter
+
+    controller master can
+      Archive_songwriter :()
+        do
+          return ()  
+
+
+template RightToIssue
+  with
     listener : Party
     master : Party
   
   where
     signatory master
-
-    controller songwriter can 
-      nonconsuming Create_Song : ContractId Record 
-        with
-          songName: Text
-          artiste: Party
-          owner: Party
-        do
-          create Record with songName; songwriter; artist = artiste; owner
-
     controller listener can
       nonconsuming Create_Money : ContractId Money 
         with
           amount: Decimal
         do
           create Money with amount; form = "Cash"; owner = listener; issuer = listener
+    
