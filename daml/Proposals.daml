@@ -1,0 +1,39 @@
+daml 1.2
+module Proposals where
+
+import Song
+import Money
+
+type RecordId = ContractId Record
+
+template PublishingProposal
+    with 
+        ratio : Decimal
+        publisher : Party
+        songwriter : Party
+        song : RecordId
+    
+    where
+        signatory publisher
+        controller songwriter can
+            PublishProposal_Accept : ContractId PublishingContract
+                do
+                    create PublishingContract with songwriter; publisher; ratio; song
+
+            PublishProposal_Reject : ()
+                do return ()
+
+template PublishingContract
+    with
+        ratio : Decimal
+        publisher : Party
+        songwriter : Party
+        song : RecordId
+    
+    where
+        signatory publisher, songwriter
+
+        controller publisher, songwriter can
+            Cancel : ()
+                do return ()
+        

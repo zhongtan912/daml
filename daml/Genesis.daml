@@ -4,6 +4,7 @@ module Genesis where
 
 import Song
 import Money
+import Proposals
 
 template Onboarding 
   with
@@ -20,6 +21,12 @@ template Onboarding
         with grantee: Party
         do
           create RightToIssue with listener = grantee; master
+
+      nonconsuming Onboard_Publisher : ContractId RightToPublish
+        with grantee: Party
+        do
+          create RightToPublish with publisher = grantee; master
+      
 
 template RightToCompose
   with
@@ -42,6 +49,27 @@ template RightToCompose
         do
           return ()  
 
+template RightToPublish
+  with
+    publisher : Party
+    master : Party
+  where
+    signatory master
+    agreement 
+      show master <> "gives " <> show publisher <> "right to publish"
+    controller publisher can 
+      nonconsuming PublishingProposal_Offer : ContractId PublishingProposal
+        with 
+          songwriter : Party
+          ratio : Decimal
+          song : RecordId
+        do
+          create PublishingProposal with songwriter; ratio; song; publisher
+
+    controller master can
+      Archive_publisher :()
+        do
+          return () 
 
 template RightToIssue
   with

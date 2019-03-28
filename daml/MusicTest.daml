@@ -2,6 +2,7 @@ daml 1.2
 module MusicTest where
 
 import Genesis
+import Proposals
 
 setupTest = scenario do
     iTunes <- getParty "iTunes"
@@ -12,22 +13,46 @@ setupTest = scenario do
     user <- getParty "iTunes user"
     master <- getParty "Master"
 
-    --Onboard songwriter with genesis contract
+ 
     onboarding <- submit master do
         create Onboarding with
             master
 
+--Onboard songwriter with genesis contract
     composerRights <- submit master do
         exercise onboarding Onboard_Songwriter with grantee = trickystewards
 
+--Onboard listener with genesis contract
     listenerRights <- submit master do
         exercise onboarding Onboard_Listener with grantee = user
 
-    submit trickystewards do
+--Onboard publisher with genesis contract
+    publisherRights <- submit master do
+        exercise onboarding Onboard_Publisher with grantee = hipgnosis
+
+
+--Create song
+    umbrella <- submit trickystewards do
         exercise composerRights Create_Song with 
             songName = "Umbrella"
             artist = rihanna
 
+--Create money
     submit user do
         exercise listenerRights Create_Money with
             amount = 100.0
+
+--Offer publishing contract
+    publishProposal <- submit hipgnosis do
+        exercise publisherRights PublishingProposal_Offer with 
+            ratio = 0.5
+            songwriter = trickystewards
+            song =  umbrella
+
+--Accept publishing contract
+    publishContract <- submit trickystewards do
+        exercise publishProposal PublishProposal_Accept
+
+--Cancel publishing contract
+    submit hipgnosis do
+        exercise publishContract Cancel
